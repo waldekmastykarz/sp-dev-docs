@@ -635,7 +635,7 @@ export default class ListItems extends React.Component<IListItemsProps, {}> {
                 Welcome to SharePoint!
               </span>
               <p className='ms-font-l ms-fontColor-white'>
-                Customize SharePoint experiences using Web Parts.
+                Customize SharePoint experiences using web parts.
               </p>
               <p className='ms-font-l ms-fontColor-white'>
                 {this.props.list}
