@@ -2,13 +2,13 @@
 
 > **Note:** The SharePoint Framework is currently in preview and is subject to change. SharePoint Framework client-side web parts are not currently supported for use in production environments.
 
-When building web parts you might need to change the available options in one web part property based on the value selected in another property. Often, this is required when implementing cascading dropdown controls. In this article you will learn how to create cascading dropdown controls in web part properties without developing a custom property pane control.
+When designing the property pane for your SharePoint client-side web parts, you may have one web part property that displays its options based on the  value selected in another property. This scenario typically occurs when implementing cascading dropdown controls. In this article, you will learn how to create cascading dropdown controls in the web part property pane without developing a custom property pane control.
 
 ![Item dropdown disabled and web part placeholder communicating loading updated list of item options](../../../../images/react-cascading-dropdowns-loading-indicator-when-loading-items.png)
 
 The source of the working web part is available on GitHub at [https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-custompropertypanecontrols](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-custompropertypanecontrols).
 
-> **Note:** Before following the steps in this article, be sure to [set up your development environment](../../set-up-your-development-environment) for building SharePoint Framework solutions.
+> **Note:** Before following the steps in this article, be sure to [set up your SharePoint client-side web part development environment](../../set-up-your-development-environment).
 
 ## Create new project
 
@@ -44,15 +44,15 @@ Once the scaffolding completes, open your project folder in your code editor. Th
 
 ![SharePoint Framework project open in Visual Studio Code](../../../../images/react-cascading-dropdowns-visual-studio-code.png)
 
-## Define web part property for storing the selected list
+## Define a web part property to store the selected list
 
-You will build a web part that displays list items from a selected SharePoint list. Users will be able to select a list in the web part properties. To store the selected list create a new web part property named **listName**.
+You will build a web part that displays list items from a selected SharePoint list. Users will be able to select a list in the web part property pane. To store the selected list create a new web part property named **listName**.
 
-In the code editor open the **src/webparts/listItems/ListItemsWebPartManifest.json** file. Replace the default **description** property with a new property named `listName`.
+In the code editor, open the **src/webparts/listItems/ListItemsWebPartManifest.json** file. Replace the default **description** property with a new property named `listName`.
 
 ![Web part manifest with the list web part property highlighted](../../../../images/react-cascading-dropdowns-listname-property-web-part-manifest.png)
 
-Next, open the **src/webparts/listItems/IListItemsWebPartProps.ts** file and replace its contents with:
+Next, open the **src/webparts/listItems/IListItemsWebPartProps.ts** file, and replace its contents with:
 
 ```ts
 export interface IListItemsWebPartProps {
@@ -106,7 +106,7 @@ export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWe
 }
 ```
 
-In the **src/webparts/listItems/loc/mystrings.d.ts** file change the **IListItemsStrings** interface to:
+In the **src/webparts/listItems/loc/mystrings.d.ts** file, change the **IListItemsStrings** interface to:
 
 ```ts
 declare interface IListItemsStrings {
@@ -116,7 +116,7 @@ declare interface IListItemsStrings {
 }
 ```
 
-In the **src/webparts/listItems/loc/en-us.js** file add the missing definition for the **ListNameFieldLabel** string.
+In the **src/webparts/listItems/loc/en-us.js** file, add the missing definition for the **ListNameFieldLabel** string.
 
 ```js
 define([], function() {
@@ -128,7 +128,7 @@ define([], function() {
 });
 ```
 
-In the **src/webparts/listItems/components/ListItems.tsx** file change the contents of the **render** method to:
+In the **src/webparts/listItems/components/ListItems.tsx** file, change the contents of the **render** method to:
 
 ```tsx
 export default class ListItems extends React.Component<IListItemsProps, {}> {
@@ -174,7 +174,7 @@ In the web browser, add the **List items** web part to the canvas and open its p
 
 ## Populate the dropdown with SharePoint lists to choose from
 
-At this point a user specifies which list the web part should use, by manually entering its name. This is error-prone and ideally you want users to choose one of the lists existing in the current SharePoint site instead.
+At this point, a user specifies which list the web part should use by manually entering the list name. This is error-prone and ideally you want users to choose one of the lists existing in the current SharePoint site.
 
 ### Use dropdown control to render the listName property
 
@@ -195,7 +195,7 @@ Right after this import statement, add a reference to the **IDropdownOption** in
 import { IDropdownOption } from 'office-ui-fabric-react';
 ```
 
-In the **ListItemsWebPart** class add a new variable named **lists** which you will use to store information about all available lists in the current site.
+In the **ListItemsWebPart** class, add a new variable named **lists** to store information about all available lists in the current site.
 
 ```ts
 export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWebPartProps> {
@@ -255,11 +255,11 @@ gulp serve
 
 ### Show available lists in the list dropdown
 
-Previously you associated the dropdown control of the **listName** property with the **lists** class property. Since you haven't loaded any values into it yet, the **List** dropdown in the web part property pane remains disabled. In this step you will extend the web part to load the information about available lists.
+Previously, you associated the dropdown control of the **listName** property with the **lists** class property. Since you haven't loaded any values into it yet, the **List** dropdown in the web part property pane remains disabled. In this step, you will extend the web part to load the information about available lists.
 
-#### Add method to load available lists
+#### Add a method to load available lists
 
-In the **ListItemsWebPart** class add a method to load available lists. In this article you will use mock data, but you could also call the SharePoint REST API to retrieve the list of available lists from the current web. To simulate loading options from an external service the method uses a two-second delay.
+In the **ListItemsWebPart** class, add a method to load available lists. In this article you will use mock data, but you could also call the SharePoint REST API to retrieve the list of available lists from the current web. To simulate loading options from an external service the method uses a two-second delay.
 
 ```ts
 export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWebPartProps> {
@@ -283,7 +283,7 @@ export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWe
 
 #### Load information about available lists into the list dropdown
 
-In the **ListItemsWebPart** class override the **onPropertyPaneConfigurationStart** method using the following code:
+In the **ListItemsWebPart** class, override the **onPropertyPaneConfigurationStart** method using the following code:
 
 ```ts
 export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWebPartProps> {
@@ -328,7 +328,7 @@ When you add a web part to the canvas and open its property pane, you should see
 
 ## Allow users to select an item from the selected list
 
-When building web parts you often need to allow users to choose an option from a set determined by a previously selected value, such as choosing a country based on the selected continent or choosing a list item from a selected list. This user experience is often referred to as cascading dropdowns. Using the standard SharePoint Framework client-side web parts capabilities you can build cascading dropdowns in the web part property pane. To learn how to do it you will extend the previously built web part with the ability to choose a list item based on the previously selected list.
+When building web parts you often need to allow users to choose an option from a set of values determined by a previously selected value, such as choosing a country based on the selected continent or choosing a list item from a selected list. This user experience is often referred to as cascading dropdowns. Using the standard SharePoint Framework client-side web parts capabilities you can build cascading dropdowns in the web part property pane. To learn how to do it you will extend the previously built web part with the ability to choose a list item based on the previously selected list.
 
 ![List item dropdown open in the web part property pane](../../../../images/react-cascading-dropdowns-item-dropdown-list-items.png)
 
@@ -347,7 +347,7 @@ In the code editor open the **src/webparts/listItems/ListItemsWebPart.manifest.j
 }
 ```
 
-![Web part manifest with the 'itemName' web part property highlighted](../../../../images/react-cascading-dropdowns-itemname-property-web-part-manifest.png)
+![Web part manifest with the itemName web part property highlighted](../../../../images/react-cascading-dropdowns-itemname-property-web-part-manifest.png)
 
 Change the code in the **src/webparts/listItems/IListItemsWebPartProps.ts** file to:
 
@@ -375,7 +375,7 @@ export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWe
 }
 ```
 
-In the **src/webparts/listItems/loc/mystrings.d.ts** file change the **IListItemsStrings** interface to:
+In the **src/webparts/listItems/loc/mystrings.d.ts** file, change the **IListItemsStrings** interface to:
 
 ```ts
 declare interface IListItemsStrings {
@@ -386,7 +386,7 @@ declare interface IListItemsStrings {
 }
 ```
 
-In the **src/webparts/listItems/loc/en-us.js** file add the missing definition for the **ItemNameFieldLabel** string.
+In the **src/webparts/listItems/loc/en-us.js** file, add the missing definition for the **ItemNameFieldLabel** string.
 
 ```js
 define([], function() {
@@ -401,7 +401,7 @@ define([], function() {
 
 ### Render the value of the item web part property
 
-In the **src/webparts/listItems/components/ListItems.tsx** file change the **render** method to:
+In the **src/webparts/listItems/components/ListItems.tsx** file, change the **render** method to:
 
 ```tsx
 export default class ListItems extends React.Component<IListItemsProps, {}> {
@@ -442,7 +442,7 @@ export default class ListItems extends React.Component<IListItemsProps, {}> {
 
 Similar to how users can select a list using a dropdown, they should be able to select the item from the list of available items.
 
-In the **ListItemsWebPart** class add a new variable named **items** which you will use to store information about all available items in the currently selected list.
+In the **ListItemsWebPart** class, add a new variable named **items** which you will use to store information about all available items in the currently selected list.
 
 ```ts
 export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWebPartProps> {
@@ -508,7 +508,7 @@ gulp serve
 
 ### Show items available in the selected list in the item dropdown
 
-Previously you defined a dropdown control to render the **itemName** property in the web part property pane. Next, you will extend the web part to load the information about items available in the selected list and show the items in the item dropdown.
+Previously, you defined a dropdown control to render the **itemName** property in the web part property pane. Next, you will extend the web part to load the information about items available in the selected list and show the items in the item dropdown.
 
 #### Add method to load list items
 
@@ -560,7 +560,7 @@ The **loadItems** method returns mock list items for the previously selected lis
 
 #### Load information about available items into the item dropdown
 
-In the **ListItemsWebPart** class extend the **onPropertyPaneConfigurationStart** method to load items for the selected list.
+In the **ListItemsWebPart** class, extend the **onPropertyPaneConfigurationStart** method to load items for the selected list.
 
 ```ts
 export default class ListItemsWebPart extends BaseClientSideWebPart<IListItemsWebPartProps> {
