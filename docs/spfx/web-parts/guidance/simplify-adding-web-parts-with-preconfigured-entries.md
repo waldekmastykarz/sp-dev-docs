@@ -37,7 +37,7 @@ One of the properties specified in the web part manifest is the **preconfiguredE
 
 The **preconfiguredEntries** property provides information about your web part for use in the web part toolbox. When users add web parts to the page, the information from the **preconfiguredEntries** property is used to display the web part in the toolbox and define its default settings when it's added to the page.
 
-Compared to classic web parts that you built with full-trust solutions, each entry in the **preconfiguredEntries** array corresponds to a **.webpart** file. Just like a **.webpart** file, each entry in the **preconfiguredEntries** property is linked to the web part code and specifies basic information about the web part such as its title or description as well as default values for its properties.
+If you've built classic web parts with full-trust solutions, then you can think of each entry in the **preconfiguredEntries** array as corresponding to a **.webpart** file. Just like a **.webpart** file, each entry in the **preconfiguredEntries** property is linked to the web part code and specifies basic information about the web part such as its title or description as well as default values for its properties.
 
 ### Properties of a **preconfiguredEntries** array item
 
