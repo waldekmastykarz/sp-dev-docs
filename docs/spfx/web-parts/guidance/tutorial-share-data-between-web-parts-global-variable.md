@@ -1,7 +1,5 @@
 # Share Data Between Web Parts Using a Global Variable (Tutorial)
 
-> Note: This article has not yet been verified with the SPFx GA version, so you might have challenges making this work as described using the latest release.
-
 When building client-side web parts, loading data once and reusing it across different web parts will help improve the performance of your pages and decrease the load on your network. This tutorial illustrates step-by-step how to share data between web parts using a global variable.
 
 > **Note:** Before following the steps in this article, be sure to [set up your SharePoint client-side web part development environment](../../set-up-your-development-environment).
@@ -58,17 +56,31 @@ export interface IRecentDocumentsWebPartProps {
 }
 ```
 
+Next, remove the `description` property from the `IRecentDocumentsProps` interface. In the code editor, open the **./src/webparts/recentDocuments/components/IRecentDocumentsProps.ts** file and paste the following code:
+
+```ts
+export interface IRecentDocumentsProps {
+}
+```
+
 Remove the standard `description` property from the web part manifest. Open the **./src/webparts/recentDocuments/RecentDocumentsWebPart.manifest.json** file, and from the `properties` property, remove the `description` property:
 
 ```json
 {
-  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
   "id": "7a7e3aa9-5d8a-4155-936b-0b0e06e9ca11",
   "alias": "RecentDocumentsWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+
+  // The "*" signifies that the version should be taken from the package.json
+  "version": "*",
   "manifestVersion": 2,
+
+  // If true, the component can only be installed on sites where Custom Script is allowed.
+  // Components that allow authors to embed arbitrary script code should set this to true.
+  // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
+  "requiresCustomScript": false,
 
   "preconfiguredEntries": [{
     "groupId": "7a7e3aa9-5d8a-4155-936b-0b0e06e9ca11",
@@ -180,12 +192,12 @@ import {
   DocumentCardPreview,
   DocumentCardTitle,
   DocumentCardActivity
-} from 'office-ui-fabric-react';
+} from 'office-ui-fabric-react/lib/DocumentCard';
 import { IDocument } from '../IDocument';
 import styles from './RecentDocuments.module.scss';
 import { IRecentDocumentsProps } from './IRecentDocumentsProps';
 
-export default class RecentDocuments extends React.Component<IRecentDocumentsProps, void> {
+export default class RecentDocuments extends React.Component<IRecentDocumentsProps, {}> {
   public render(): React.ReactElement<IRecentDocumentsProps> {
     const documents: JSX.Element[] = this.props.documents.map((document: IDocument, index: number, array: IDocument[]): JSX.Element => {
       return (
@@ -214,7 +226,7 @@ export default class RecentDocuments extends React.Component<IRecentDocumentsPro
       );
     });
     return (
-      <div className={styles.helloWorld}>
+      <div className={styles.recentDocuments}>
         {documents}
       </div>
     );
@@ -352,7 +364,6 @@ yo @microsoft/sharepoint
 
 When prompted, enter the following values:
 
-
 - **WebPart** as the type of client-side component to create.
 - **Recent document** as your web part name.
 - **Shows information about the most recently modified document** as your web part description.
@@ -368,17 +379,31 @@ export interface IRecentDocumentWebPartProps {
 }
 ```
 
+Next, remove the `description` property from the `IRecentDocumentProps` interface. In the code editor, open the **./src/webparts/recentDocument/components/IRecentDocumentProps.ts** file and paste the following code:
+
+```ts
+export interface IRecentDocumentProps {
+}
+```
+
 Remove the standard `description` property from the web part manifest. Open the **./src/webparts/recentDocument/RecentDocumentWebPart.manifest.json** file, and from the `properties` property, remove the `description` property:
 
 ```json
 {
-  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
   "id": "71a6f643-1ac1-47ee-a9f1-502ef52f26d4",
   "alias": "RecentDocumentWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+
+  // The "*" signifies that the version should be taken from the package.json
+  "version": "*",
   "manifestVersion": 2,
+
+  // If true, the component can only be installed on sites where Custom Script is allowed.
+  // Components that allow authors to embed arbitrary script code should set this to true.
+  // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
+  "requiresCustomScript": false,
 
   "preconfiguredEntries": [{
     "groupId": "71a6f643-1ac1-47ee-a9f1-502ef52f26d4",
@@ -490,14 +515,14 @@ import {
   DocumentCard,
   DocumentCardPreview,
   DocumentCardTitle,
-  DocumentCardActivity,
-  ImageFit
-} from 'office-ui-fabric-react';
+  DocumentCardActivity
+} from 'office-ui-fabric-react/lib/DocumentCard';
+import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { IDocument } from '../../IDocument';
 import styles from './RecentDocument.module.scss';
 import { IRecentDocumentProps } from './IRecentDocumentProps';
 
-export default class RecentDocument extends React.Component<IRecentDocumentProps, void> {
+export default class RecentDocument extends React.Component<IRecentDocumentProps, {}> {
   public render(): React.ReactElement<IRecentDocumentProps> {
     const document: IDocument = this.props.document;
 
